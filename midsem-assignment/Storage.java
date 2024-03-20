@@ -1,3 +1,4 @@
+import java.io.*;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -6,15 +7,15 @@ public class Storage {
     public static void main(String[] args) {
         int students = 0;
         Scanner input = new Scanner(System.in);
-            try{
-                System.out.println("Enter the number of Students: ");
-                students = input.nextInt();
+        try{
+            System.out.println("Enter the number of Students: ");
+            students = input.nextInt();
 
-            } catch(InputMismatchException e){
-                
-                System.err.println("Invalid input");
-                System.exit(0);
-            }
+        } catch(InputMismatchException e){
+            
+            System.err.println("Invalid input");
+            System.exit(0);
+        }
         input.nextLine();
         String name;
         ArrayList<String> names = new ArrayList<>();
@@ -66,63 +67,74 @@ public class Storage {
                 }
                 input.nextLine();    
                 ratings[i] = rate;
-                
+        
+                switch (ratings[i]) {
+                    case 1:
+                        freqRatings[0]++;              
+                        break;
+                    case 2:
+                        freqRatings[1]++;
+                        break;
+                    case 3:
+                        freqRatings[2]++;
+                        break;
+                    case 4:
+                        freqRatings[3]++;
+                        break;
+                    case 5:
+                        freqRatings[4]++;
+                        break;
+                    case 6:
+                        freqRatings[5]++;
+                        break;
+                    case 7:
+                        freqRatings[6]++;
+                        break;
+                    default:
+                        break;
+                }
             } catch(NumberFormatException e2){
                 System.out.println("Input must be an integer!");
                 System.exit(0);
-            } catch(Exception e3){
-                e3.printStackTrace();
-                System.exit(0);
-            }
-            switch (ratings[i]) {
-                case 1:
-                    freqRatings[0]++;              
-                    break;
-                case 2:
-                    freqRatings[1]++;
-                    break;
-                case 3:
-                    freqRatings[2]++;
-                    break;
-                case 4:
-                    freqRatings[3]++;
-                    break;
-                case 5:
-                    freqRatings[4]++;
-                    break;
-                case 6:
-                    freqRatings[5]++;
-                    break;
-                case 7:
-                    freqRatings[6]++;
-                    break;
-                default:
-                    break;
             }
         }
-        
-        System.out.println("Number of student names: " + countNames);
-        System.out.println("Number of phone numbers: " + countNumbers);
-        System.out.println("Frequency of each holiday ratings: ");
-        System.out.println("1: " + freqRatings[0] + "\n2: " + freqRatings[1] + "\n3: " + freqRatings[2] + "\n4: " + freqRatings[3]);
-        System.out.println("5: " + freqRatings[4] + "\n6: " + freqRatings[5] + "\n7: " + freqRatings[6]);
-        int[] rateTypes = {1, 2, 3, 4, 5, 6, 7};
-        for (int i=0; i<freqRatings.length; i++){
-            for (int x=i+1; x<freqRatings.length; x++){
-                if (freqRatings[x] > freqRatings[i]){
-                    int tmp = freqRatings[i];
-                    freqRatings[i] = freqRatings[x];
-                    freqRatings[x] = tmp;
-                    int tmpType = rateTypes[i];
-                    rateTypes[i] = rateTypes[x];
-                    rateTypes[x] = tmpType;
+        try{
+            FileWriter file = new FileWriter("storage.txt");
+            BufferedWriter writer = new BufferedWriter(file);
+            System.out.println("Number of student names: " + countNames);
+            writer.write("Number of student names: " + countNames);
+            System.out.println("Number of phone numbers: " + countNumbers);
+            writer.write("\nNumber of phone numbers: " + countNumbers);
+            System.out.println("Frequency of each holiday ratings: ");
+            System.out.println("1: " + freqRatings[0] + "\n2: " + freqRatings[1] + "\n3: " + freqRatings[2] + "\n4: " + freqRatings[3]);
+            writer.write("\n1: " + freqRatings[0] + "\n2: " + freqRatings[1] + "\n3: " + freqRatings[2] + "\n4: " + freqRatings[3]);
+            System.out.println("5: " + freqRatings[4] + "\n6: " + freqRatings[5] + "\n7: " + freqRatings[6]);
+            writer.write("\n5: " + freqRatings[4] + "\n6: " + freqRatings[5] + "\n7: " + freqRatings[6]);
+            int[] rateTypes = {1, 2, 3, 4, 5, 6, 7};
+            for (int y=0; y<freqRatings.length; y++){
+                for (int x=y+1; x<freqRatings.length; x++){
+                    if (freqRatings[x] > freqRatings[y]){
+                        int tmp = freqRatings[y];
+                        freqRatings[y] = freqRatings[x];
+                        freqRatings[x] = tmp;
+                        int tmpType = rateTypes[y];
+                        rateTypes[y] = rateTypes[x];
+                        rateTypes[x] = tmpType;
+                    }
                 }
             }
-        }
-        System.out.println("Count of ratings in descending order: ");
-        for (int i=0; i<freqRatings.length; i++){
-            System.out.println(rateTypes[i] + ": " + freqRatings[i]);
-        }
+            System.out.println("Count of ratings in descending order: ");
+            writer.write("\nCount of ratings in descending order: ");
+            for (int j=0; j<freqRatings.length; j++){
+                System.out.println(rateTypes[j] + ": " + freqRatings[j]);
+                writer.write("\n" + rateTypes[j] + ": " + freqRatings[j]);
+            }
+            writer.close();
+            
+            } catch(IOException e3){
+                e3.printStackTrace();
+            }
+        
         System.out.print("Do you want to search for a student record (yes/no): ");
      	while (true){
         String search = input.next();
@@ -143,7 +155,7 @@ public class Storage {
                 }
             }
         }else if (search.equalsIgnoreCase("no")){
-            ;
+            System.exit(0);;
         }else {
             System.out.println("Invalid input. Input must be 'yes' or 'no'.");
             count++;
@@ -152,8 +164,8 @@ public class Storage {
             }
             continue;
             }
-        }
-    }        
+        }      
+    }
 }
     
 
